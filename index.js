@@ -1,5 +1,7 @@
 const { bacaData } = require("./fungsiCustom");
 
+
+
 // ! JANGAN DIMODIFIKASI
 // main function
 (() => {

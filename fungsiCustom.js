@@ -1,4 +1,5 @@
 // TODO: import module bila dibutuhkan di sini
+const fs = require("fs");
 
 // ! JANGAN DIMODIFIKASI
 let file1 = "./data1.json";
@@ -18,7 +19,70 @@ let modifyFile3 = (val) => {
 
 // TODO: Kerjakan bacaData
 // gunakan variabel file1, file2, dan file3
-const bacaData = null;
+
+const processData = (datas) => {
+  const extract = JSON.parse(datas);
+  if (extract.message !== undefined) {
+    const letSplit = extract.message.split(" ");
+    return letSplit[1];
+  } else if (extract[0].message !== undefined) {
+    const letSplit = extract[0].message.split(" ");
+    return letSplit[1];
+  } else if (extract[0].data.message !== undefined) {
+    const letSplit = extract[0].data.message.split(" ");
+    return letSplit[1];
+  }
+};
+
+const bacaData = (fnCallback) => {
+  let files = [file1, file2, file3];
+  let finalResult = [];
+  // files.forEach((readFiles, index) => {
+  //   fs.readFile(
+  //     readFiles,
+  //     { encoding: 'utf8' },
+  //     (err, data) => {
+  //       if (err) {
+  //         fnCallback(err, null)
+  //       } else {
+  //         const result = processData(data)
+  //         finalResult.push(result)
+  //         if (index == 2) {
+  //           fnCallback(err, finalResult)
+  //         }
+  //       }
+  //     })
+  // })
+  fs.readFile(file1, { encoding: "utf8" }, (err, data) => {
+    if (err) {
+      fnCallback(err, null);
+    } else {
+      const result = processData(data);
+      finalResult.push(result);
+      //fnCallback(err, finalResult);
+
+      fs.readFile(file2, { encoding: "utf8" }, (err, data) => {
+        if (err) {
+          fnCallback(err, null);
+        } else {
+          const result = processData(data);
+          finalResult.push(result);
+          //fnCallback(err, finalResult);
+
+          fs.readFile(file3, { encoding: "utf8" }, (err, data) => {
+            if (err) {
+              fnCallback(err, null);
+            } else {
+              const result = processData(data);
+              finalResult.push(result);
+              fnCallback(err, finalResult);
+            }
+          });
+        }
+      });
+    }
+  });
+};
 
 // ! JANGAN DIMODIFIKASI
 module.exports = {
